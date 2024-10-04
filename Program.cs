@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>() // Default roles, using strings as key
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -41,5 +42,32 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// Det här behövs bara köras en gång,
+// Det körs här för demonstration
+using (var scope = app.Services.CreateScope())
+{
+    //
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roleNames = { "Leader", "Parent", "Scout" };
+
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    // Lägg till en roll till en användare
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    
+    var me = await userManager.FindByEmailAsync("gherghetta@gmail.com");
+    await userManager.AddToRoleAsync(me!, "Leader");
+    //await userManager.RemoveFromRoleAsync(me!, "Leader");
+    var roles = await userManager.GetRolesAsync(me!);
+    Console.Write("---Roles----------: ");
+    Console.WriteLine(string.Join(", ", roles));
+}
 
 app.Run();
