@@ -34,8 +34,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-app.UseAuthorization();
+app.UseAuthentication(); // Lägger till autentisering
+app.UseAuthorization(); // OBS viktigt att de är i denna ordningen
 
 app.MapControllerRoute(
     name: "default",
