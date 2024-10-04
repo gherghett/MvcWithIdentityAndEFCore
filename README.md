@@ -6,7 +6,7 @@
    ```
 
 ### Steg 2: Ny klass: `ApplicationUser`
-Skapa en egen klass som ärver från `IdentityUser` om du vill lägga till ytterligare egenskaper till användaren, såsom roller eller andra attribut.
+Skapa en egen klass som ärver från `IdentityUser` om du vill lägga till ytterligare egenskaper till användaren.
 
 1. **Skapa en ny klass `ApplicationUser`** i mappen `Models/`:
    ```csharp
