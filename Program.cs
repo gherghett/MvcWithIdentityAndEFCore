@@ -45,29 +45,35 @@ app.MapRazorPages();
 
 // Det här behövs bara köras en gång,
 // Det körs här för demonstration
-using (var scope = app.Services.CreateScope())
+bool JagHarEnAnvändareMedRättEpost = false; //ändra efter du skapat användare
+string epost = "gherghetta@gmail.com"; 
+
+if(JagHarEnAnvändareMedRättEpost)
 {
-    //
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roleNames = { "Leader", "Parent", "Scout" };
-
-    foreach (var roleName in roleNames)
+    using (var scope = app.Services.CreateScope())
     {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new IdentityRole(roleName));
-        }
-    }
+        //
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        string[] roleNames = { "Leader", "Parent", "Scout" };
 
-    // Lägg till en roll till en användare
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    
-    var me = await userManager.FindByEmailAsync("gherghetta@gmail.com");
-    await userManager.AddToRoleAsync(me!, "Leader");
-    //await userManager.RemoveFromRoleAsync(me!, "Leader");
-    var roles = await userManager.GetRolesAsync(me!);
-    Console.Write("---Roles----------: ");
-    Console.WriteLine(string.Join(", ", roles));
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
+
+        // Lägg till en roll till en användare
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        
+        var me = await userManager.FindByEmailAsync(epost);
+        await userManager.AddToRoleAsync(me!, "Leader");
+        //await userManager.RemoveFromRoleAsync(me!, "Leader");
+        var roles = await userManager.GetRolesAsync(me!);
+        Console.Write("---Roles----------: ");
+        Console.WriteLine(string.Join(", ", roles));
+    }
 }
 
 app.Run();
