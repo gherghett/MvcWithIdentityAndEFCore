@@ -17,7 +17,7 @@ Skapa en egen klass som ärver från `IdentityUser` om du vill lägga till ytter
    ```
 
 ### Steg 2: Anpassa `ApplicationDbContext`
-Om du vill göra ändringar i databasen eller hantera fler tabeller, behöver du också anpassa `ApplicationDbContext`.
+Anpassa den att använda vår ny användarklass. Om du vill göra ändringar i databasen eller hantera fler tabeller, behöver du också anpassa `ApplicationDbContext`.
 
 1. **Skapa en anpassad `ApplicationDbContext`-klass**:
    ```csharp
